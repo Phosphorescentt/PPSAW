@@ -6,26 +6,29 @@ import requests
 class PandaScoreAPIClient:
     def __init__(self, API_KEY: str = "", settings: dict = {}):
         if API_KEY != "":
-            self.API_KEY = API_KEY
+            self.set_api_key(API_KEY)
 
-            self.headers = {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + self.API_KEY,
-            }
-
-        if settings != {}:
-            self.settings = settings
+        # if settings != {}:
+        #     self.settings = settings
+        self.settings = settings
 
         self.base_urls = {
-            "incidents": "https://api.pandascore.co/additions",
-            "leagues": "https://api.pandascore.co/leagues",
-            "lives": "https://api.pandascore.co/lives",
-            "matches": "https://api.pandascore.co/matches",
-            "players": "https://api.pandascore.co/players",
-            "series": "https://api.pandascore.co/series",
-            "teams": "https://api.pandascore.co/teams",
-            "tournaments": "https://api.pandascore.co/tournaments",
-            "videogames": "https://api.pandascore.co/videogames",
+            "incidents": "https://api.pandascore.co/additions/",
+            "leagues": "https://api.pandascore.co/leagues/",
+            "lives": "https://api.pandascore.co/lives/",
+            "matches": "https://api.pandascore.co/matches/",
+            "players": "https://api.pandascore.co/players/",
+            "series": "https://api.pandascore.co/series/",
+            "teams": "https://api.pandascore.co/teams/",
+            "tournaments": "https://api.pandascore.co/tournaments/",
+            "videogames": "https://api.pandascore.co/videogames/",
+        }
+
+    def set_api_key(self, API_KEY: str) -> None:
+        self.API_KEY = API_KEY
+        self.headers = {
+            "Accept": "application/json",
+            "Authorization": "Bearer " + self.API_KEY,
         }
 
     def get_request(self, url: str) -> requests.Response:
@@ -89,7 +92,7 @@ class PandaScoreAPIClient:
 
         return response.json()
 
-    def get_league(self, id: int, slug: str):
+    def get_league(self, id: int, slug: str = ""):
         url = self.base_urls["leagues"]
 
         if id:
@@ -98,6 +101,96 @@ class PandaScoreAPIClient:
             url += slug
         else:
             raise Exception("Something went wrong")
+
+        response = self.get_request(url)
+        return response.json()
+
+    def get_matches_for_league(self, id: int, slug: str = ""):
+        url = self.base_urls["leagues"]
+
+        if id:
+            url += str(id)
+        elif slug:
+            url += slug
+        else:
+            raise Exception("Something went wrong")
+
+        url += "/matches/"
+
+        response = self.get_request(url)
+        return response.json()
+
+    def get_past_matches_for_league(self, id: int, slug: str = ""):
+        url = self.base_urls["leagues"]
+
+        if id:
+            url += str(id)
+        elif slug:
+            url += slug
+        else:
+            raise Exception("Something went wrong")
+
+        url += "/matches/past/"
+
+        response = self.get_request(url)
+        return response.json()
+
+    def get_running_matches_for_league(self, id: int, slug: str = ""):
+        url = self.base_urls["leagues"]
+
+        if id:
+            url += str(id)
+        elif slug:
+            url += slug
+        else:
+            raise Exception("Something went wrong")
+
+        url += "/matches/running/"
+
+        response = self.get_request(url)
+        return response.json()
+
+    def get_upcoming_matches_for_league(self, id: int, slug: str = ""):
+        url = self.base_urls["leagues"]
+
+        if id:
+            url += str(id)
+        elif slug:
+            url += slug
+        else:
+            raise Exception("Something went wrong")
+
+        url += "/matches/upcoming/"
+
+        response = self.get_request(url)
+        return response.json()
+
+    def list_of_series_for_league(self, id: int, slug: str = ""):
+        url = self.base_urls["leagues"]
+
+        if id:
+            url += str(id)
+        elif slug:
+            url += slug
+        else:
+            raise Exception("Something went wrong")
+
+        url += "/series/"
+
+        response = self.get_request(url)
+        return response.json()
+
+    def get_tournaments_for_league(self, id: int, slug: str = ""):
+        url = self.base_urls["leagues"]
+
+        if id:
+            url += str(id)
+        elif slug:
+            url += slug
+        else:
+            raise Exception("Something went wrong")
+
+        url += "/tournaments/"
 
         response = self.get_request(url)
         return response.json()
